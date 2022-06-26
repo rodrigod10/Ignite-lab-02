@@ -1,9 +1,16 @@
-import { Evento } from './pages/evento';
+import { ApolloProvider } from '@apollo/client';
+import { BrowserRouter } from 'react-router-dom';
+import { client } from './lib/apollo';
+import { Router } from './Router';
 
 function App() {
   return (
     <div>
-      <Evento/>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <Router/>
+        </BrowserRouter>
+      </ApolloProvider>
     </div>
   )
 }
