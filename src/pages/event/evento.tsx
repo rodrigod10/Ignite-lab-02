@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import { Header } from "../components/header/Header";
-import { Sidebar } from "../components/sidebar/Sidebar";
-import { Videos } from "../components/videos/Videos";
+import { Header } from "../../components/header/Header";
+import { Sidebar } from "../../components/sidebar/Sidebar";
+import { Videos } from "../../components/videos/Videos";
 
 
 export function Evento(){

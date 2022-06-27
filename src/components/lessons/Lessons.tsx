@@ -1,7 +1,8 @@
+import classNames from 'classnames';
 import { format, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CheckCircle, Lock } from "phosphor-react";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface LessonsProps {
   title: string;
@@ -10,20 +11,28 @@ interface LessonsProps {
   type: 'live'| 'class';
 }
 
-export function Lessons({title, slug, availableAt, type}: LessonsProps){
-  const isLessonAvailable = isPast(availableAt);
-  const availableDateFormat = format(availableAt, "EEEE' • 'd' de 'MMMM' • 'k'h'mm",{
+export function Lessons(props : LessonsProps){
+  const { slug } = useParams<{slug: string}>()
+  const isLessonAvailable = isPast(props.availableAt);
+  const availableDateFormat = format(props.availableAt, "EEEE' • 'd' de 'MMMM' • 'k'h'mm",{
     locale: ptBR,
   })
+  const isActiveLesson = slug === props.slug;
+  
+  console.log(isLessonAvailable)
   return (
-    <Link to={`/event/lessons/${slug}`} className="group">
+    <Link to={`/event/lessons/${props.slug}`} className="group">
       <span className="text-gray-300">
         {availableDateFormat}
       </span>
-
-      <div className="rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500">
+      <div className={classNames('rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500',{
+        'bg-green-500': isActiveLesson,
+      })}>
         <header className="flex items-center justify-between ">
-        {isLessonAvailable ? (<span className="flex items-center gap-2 text-sm text-blue-500 font-medium">
+        {isLessonAvailable ? (<span className={classNames("flex items-center gap-2 text-sm font-medium",{ 
+          "text-white": isActiveLesson,
+          "text-blue-500": !isActiveLesson
+        })}>
          <CheckCircle size={20}/>
           Conteúdo Liberado
         </span>)
@@ -34,12 +43,18 @@ export function Lessons({title, slug, availableAt, type}: LessonsProps){
         </span>
         )}
         
-        <span className="text-xs rounded py-[0.125rem] px-2 text-green-300 border border-green-300 font-bold">
-          {type === 'live'? 'AO VIVO' : 'AULA PRÁTICA'}
+        <span className={classNames("text-xs rounded py-[0.125rem] px-2 text-green-300 border border-green-300 font-bold",{
+          'text-white': isActiveLesson,
+          'border-white': isActiveLesson
+        })}>
+          {props.type === 'live'? 'AO VIVO' : 'AULA PRÁTICA'}
         </span>
         </header>
-        <strong className="text-gray-200 mt-5 block">
-         {title}
+        <strong className={classNames("mt-5 block",{
+          "text-white": isActiveLesson,
+          "text-gray-200" : !isActiveLesson
+        })}>
+         {props.title}
         </strong>
       </div>
     </Link>
